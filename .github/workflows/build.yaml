@@ -1,0 +1,46 @@
+name: Build & Generate API Reference
+on:
+  push:
+    branches:
+    - master
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: Quickly/published
+  SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION: 6.2.3
+  SWASHBUCKLE_DOTNET_CORE_VERSION: 6.0.x
+  API_IMPORT_SPECIFICATION_PATH: Quickly/published/swagger.json
+  API_IMPORT_DLL: Quickly/bin/Debug/net6.0/Quickly.dll
+  API_IMPORT_VERSION: v1
+  CONFIGURATION: Debug
+  DOTNET_CORE_VERSION: 6.0.x
+  WORKING_DIRECTORY: Quickly
+  README_OAS_KEY: ${{ secrets.README_OAS_SECRET }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Setup SwashBuckle .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.SWASHBUCKLE_DOTNET_CORE_VERSION }}
+    - name: Restore
+      run: dotnet restore ${{ env.WORKING_DIRECTORY }}
+    - name: Build
+      run: dotnet build ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Test
+      run: dotnet test ${{ env.WORKING_DIRECTORY }} --no-build
+    - name: Publish
+      run: dotnet publish ${{ env.WORKING_DIRECTORY }} --configuration ${{ env.CONFIGURATION }} --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    - name: Install Swashbuckle CLI .NET Global Tool
+      run: dotnet tool install --global Swashbuckle.AspNetCore.Cli --version ${{ env.SWASHBUCLE_ASPNET_CORE_CLI_PACKAGE_VERSION }}
+    - name: Generate Open API Specification Document
+      run: swagger tofile --output "${{ env.API_IMPORT_SPECIFICATION_PATH }}" "${{ env.API_IMPORT_DLL }}" ${{ env.API_IMPORT_VERSION }}
+    - name: Generate API Reference
+      uses: readmeio/github-readme-sync@v2
+      with:
+          readme-oas-key: ${{ env.README_OAS_KEY }}
+          oas-file-path: ${{ env.API_IMPORT_SPECIFICATION_PATH }}
