@@ -1,0 +1,3 @@
+| Full API Reference           | Build Status                                                                                                                                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| https://quickly.readme.io/ | [![Build & Generate API Reference](https://github.com/fffffatah/Quickly/actions/workflows/build.yaml/badge.svg)](https://github.com/fffffatah/Quickly/actions/workflows/build.yaml) |
