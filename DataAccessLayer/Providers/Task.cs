@@ -11,7 +11,7 @@ namespace DataAccessLayer.Providers
             TaskAttachments = new HashSet<TaskAttachment>();
         }
 
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? TaskTitle { get; set; }
         public string? TaskDescription { get; set; }
         public DateOnly? CreatedAt { get; set; }

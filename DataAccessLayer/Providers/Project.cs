@@ -10,7 +10,7 @@ namespace DataAccessLayer.Providers
             FkProjectsUsers = new HashSet<FkProjectsUser>();
         }
 
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? ProjectName { get; set; }
         public string? ProjectDetails { get; set; }
         public string? ProjectImageUrl { get; set; }

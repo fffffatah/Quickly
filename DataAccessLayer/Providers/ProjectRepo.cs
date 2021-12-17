@@ -20,7 +20,7 @@ namespace DataAccessLayer.Providers
             throw new NotImplementedException();
         }
 
-        public bool Delete(Guid id)
+        public bool Delete(long id)
         {
             throw new NotImplementedException();
         }
@@ -35,7 +35,7 @@ namespace DataAccessLayer.Providers
             throw new NotImplementedException();
         }
 
-        public Project Get(Guid id)
+        public Project Get(long id)
         {
             throw new NotImplementedException();
         }

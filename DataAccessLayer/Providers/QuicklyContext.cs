@@ -16,6 +16,7 @@ namespace DataAccessLayer.Providers
         {
         }
 
+        public virtual DbSet<Auth> Auths { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<CommentAttachment> CommentAttachments { get; set; } = null!;
         public virtual DbSet<FkProjectsUser> FkProjectsUsers { get; set; } = null!;
@@ -36,26 +37,39 @@ namespace DataAccessLayer.Providers
         {
             modelBuilder.HasPostgresExtension("pg_catalog", "adminpack");
 
+            modelBuilder.Entity<Auth>(entity =>
+            {
+                entity.ToTable("Auth", "quickly");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Auth_Id_seq\"'::regclass)");
+
+                entity.Property(e => e.IpAddress).HasMaxLength(20);
+
+                entity.Property(e => e.RefreshToken).HasMaxLength(256);
+            });
+
             modelBuilder.Entity<Comment>(entity =>
             {
                 entity.ToTable("Comments", "quickly");
 
                 entity.HasComment("Table of Comments in Task");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Comments_Id_seq\"'::regclass)");
+
+                entity.Property(e => e.CommenterId).HasDefaultValueSql("nextval('\"Comments_CommenterId_seq\"'::regclass)");
 
                 entity.Property(e => e.TaskComment).HasMaxLength(1024);
+
+                entity.Property(e => e.TaskId).HasDefaultValueSql("nextval('\"Comments_TaskId_seq\"'::regclass)");
 
                 entity.HasOne(d => d.Commenter)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.CommenterId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("comments_users_id_fk");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.TaskId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("comments_tasks_id_fk");
             });
 
@@ -63,14 +77,15 @@ namespace DataAccessLayer.Providers
             {
                 entity.ToTable("CommentAttachments", "quickly");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"CommentAttachments_Id_seq\"'::regclass)");
+
+                entity.Property(e => e.CommentId).HasDefaultValueSql("nextval('\"CommentAttachments_CommentId_seq\"'::regclass)");
 
                 entity.Property(e => e.FileUrl).HasMaxLength(256);
 
                 entity.HasOne(d => d.Comment)
                     .WithMany(p => p.CommentAttachments)
                     .HasForeignKey(d => d.CommentId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("commentattachments_comments_id_fk");
             });
 
@@ -78,18 +93,20 @@ namespace DataAccessLayer.Providers
             {
                 entity.ToTable("FK_ProjectsUsers", "quickly");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"FK_ProjectsUsers_Id_seq\"'::regclass)");
+
+                entity.Property(e => e.ProjectId).HasDefaultValueSql("nextval('\"FK_ProjectsUsers_ProjectId_seq\"'::regclass)");
+
+                entity.Property(e => e.UserId).HasDefaultValueSql("nextval('\"FK_ProjectsUsers_UserId_seq\"'::regclass)");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.FkProjectsUsers)
                     .HasForeignKey(d => d.ProjectId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_projectsusers_projects_id_fk");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.FkProjectsUsers)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("fk_projectsusers_users_id_fk");
             });
 
@@ -97,7 +114,7 @@ namespace DataAccessLayer.Providers
             {
                 entity.ToTable("Projects", "quickly");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Projects_Id_seq\"'::regclass)");
 
                 entity.Property(e => e.ProjectDetails).HasMaxLength(1024);
 
@@ -110,7 +127,7 @@ namespace DataAccessLayer.Providers
             {
                 entity.ToTable("Tasks", "quickly");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Tasks_Id_seq\"'::regclass)");
 
                 entity.Property(e => e.TaskDescription).HasMaxLength(1024);
 
@@ -125,14 +142,15 @@ namespace DataAccessLayer.Providers
             {
                 entity.ToTable("TaskAttachments", "quickly");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"TaskAttachments_Id_seq\"'::regclass)");
 
                 entity.Property(e => e.FileUrl).HasMaxLength(256);
+
+                entity.Property(e => e.TaskId).HasDefaultValueSql("nextval('\"TaskAttachments_TaskId_seq\"'::regclass)");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.TaskAttachments)
                     .HasForeignKey(d => d.TaskId)
-                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("taskattachments_tasks_id_fk");
             });
 
@@ -140,7 +158,7 @@ namespace DataAccessLayer.Providers
             {
                 entity.ToTable("Users", "quickly");
 
-                entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Users_Id_seq\"'::regclass)");
 
                 entity.Property(e => e.Email).HasMaxLength(64);
 
