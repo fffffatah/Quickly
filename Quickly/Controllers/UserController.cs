@@ -53,10 +53,12 @@ namespace Quickly.Controllers
                 {
                     return BadRequest(new { Message = "User Unverified, Please Verify Email First." });
                 }
+                var tokenTimeout = (userLoginModel.RememberMe) ? 525948 : 5;
                 var myClaims = new Dictionary<string, string>();
                 myClaims.Add("Id", user.Id.ToString());
                 myClaims.Add("UserType", user.UserType);
-                return Ok(new { Message = "Logged in Successfully", Token = new TokenService((userLoginModel.RememberMe) ? 525948:5).GenerateJsonWebToken(myClaims) });
+                myClaims.Add("ExpiresAt", tokenTimeout.ToString());
+                return Ok(new { Message = "Logged in Successfully", Token = new TokenService(tokenTimeout).GenerateJsonWebToken(myClaims) });
             }
             return NotFound(new { Message = "Invalid Email/Password" });
         }
