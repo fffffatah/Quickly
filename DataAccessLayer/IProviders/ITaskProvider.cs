@@ -6,7 +6,7 @@ using DataAccessLayer.Providers;
 
 namespace DataAccessLayer.IProviders
 {
-    public interface ITaskProvider : IEntityProvider<Providers.Task, Guid>
+    public interface ITaskProvider : IEntityProvider<Providers.Task, long>
     {
     }
 }

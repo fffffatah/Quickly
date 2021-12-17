@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Entities
+namespace EntityLayer.Models
 {
-    public class Task
+    public class TaskModel
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? TaskTitle { get; set; }
         public string? TaskDescription { get; set; }
         public DateTime? CreatedAt { get; set; }

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Entities
+namespace EntityLayer.Models.User
 {
-    public class UserWithProject
+    public class UserWithProjectModel
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? ProfileImageUrl { get; set; }
         public string? FullName { get; set; }
         public string? Email { get; set; }
@@ -16,7 +16,7 @@ namespace EntityLayer.Entities
         public string? Pass { get; set; }
         public string? UserType { get; set; }
         public bool IsVerified { get; set; }
-        public List<Project>? Projects { get; set; }
+        public List<ProjectModel>? Projects { get; set; }
 
     }
 }

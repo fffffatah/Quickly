@@ -7,7 +7,7 @@ using DataAccessLayer.Providers;
 
 namespace DataAccessLayer.IProviders
 {
-    public interface IFKProjectsUserProvider : IEntityProvider<FkProjectsUser, Guid>
+    public interface IFKProjectsUserProvider : IEntityProvider<FkProjectsUser, long>
     {
     }
 }

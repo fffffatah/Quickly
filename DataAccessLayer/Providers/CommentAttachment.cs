@@ -5,10 +5,10 @@ namespace DataAccessLayer.Providers
 {
     public partial class CommentAttachment
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? FileUrl { get; set; }
-        public Guid? CommentId { get; set; }
+        public long CommentId { get; set; }
 
-        public virtual Comment? Comment { get; set; }
+        public virtual Comment Comment { get; set; } = null!;
     }
 }

@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Entities
+namespace EntityLayer.Models
 {
-    public class ProjectWithTask
+    public class ProjectModel
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? ProjectName { get; set; }
         public string? ProjectDetails { get; set; }
         public string? ProjectImageUrl { get; set; }
-        public List<TaskWithAttachment>? Tasks { get; set; }
     }
 }

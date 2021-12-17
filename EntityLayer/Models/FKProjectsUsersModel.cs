@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Entities
+namespace EntityLayer.Models
 {
-    public class FKProjectsUsers
+    public class FKProjectsUsersModel
     {
-        public Guid Id { get; set; }
-        public Guid? ProjectId { get; set; }
-        public Guid? UserId { get; set; }
+        public long Id { get; set; }
+        public long? ProjectId { get; set; }
+        public long? UserId { get; set; }
         public bool? IsOwner { get; set; }
         public bool? IsProjectEditor { get; set; }
         public bool? IsTaskEditor { get; set; }

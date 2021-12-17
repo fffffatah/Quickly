@@ -15,7 +15,7 @@ namespace DataAccessLayer.Providers
             _db = new QuicklyContext();
         }
 
-        public static IEntityProvider<User, Guid> UserDataAccess()
+        public static IUserProvider UserDataAccess()
         {
             return new UserRepo(_db);
         }

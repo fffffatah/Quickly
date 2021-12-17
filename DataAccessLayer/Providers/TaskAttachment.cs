@@ -5,10 +5,10 @@ namespace DataAccessLayer.Providers
 {
     public partial class TaskAttachment
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? FileUrl { get; set; }
-        public Guid? TaskId { get; set; }
+        public long TaskId { get; set; }
 
-        public virtual Task? Task { get; set; }
+        public virtual Task Task { get; set; } = null!;
     }
 }

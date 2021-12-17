@@ -7,7 +7,7 @@ using DataAccessLayer.Providers;
 
 namespace DataAccessLayer.IProviders
 {
-    public interface ITaskAttachmentProvider : IEntityProvider<TaskAttachment, Guid>
+    public interface ITaskAttachmentProvider : IEntityProvider<TaskAttachment, long>
     {
     }
 }

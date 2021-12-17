@@ -7,7 +7,7 @@ using DataAccessLayer.Providers;
 
 namespace DataAccessLayer.IProviders
 {
-    public interface ICommentProvider : IEntityProvider<Comment, Guid>
+    public interface ICommentProvider : IEntityProvider<Comment, long>
     {
     }
 }

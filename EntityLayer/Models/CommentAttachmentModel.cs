@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Entities
+namespace EntityLayer.Models
 {
-    public class TaskAttachment
+    public class CommentAttachmentModel
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string? FileUrl { get; set; }
-        public Guid TaskId { get; set; }
+        public long? CommentId { get; set; }
     }
 }

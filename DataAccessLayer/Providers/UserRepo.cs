@@ -17,10 +17,11 @@ namespace DataAccessLayer.Providers
 
         public bool Add(User e)
         {
-            throw new NotImplementedException();
+            _db.Add(e);
+            return (_db.SaveChanges() > 0); ;
         }
 
-        public bool Delete(Guid id)
+        public bool Delete(long id)
         {
             throw new NotImplementedException();
         }
@@ -35,9 +36,33 @@ namespace DataAccessLayer.Providers
             return _db.Users.ToList();
         }
 
-        public User Get(Guid id)
+        public User Get(long id)
         {
             throw new NotImplementedException();
+        }
+
+        public User GetUserByEmail(string email)
+        {
+            return (from u in _db.Users where u.Email == email select u).FirstOrDefault();
+        }
+
+        public bool IsEmailTaken(string email)
+        {
+            var user = (from u in _db.Users where u.Email == email select u).FirstOrDefault();
+            return user != null;
+        }
+
+        public bool IsPhoneTaken(string phone)
+        {
+            var user = (from u in _db.Users where u.Phone == phone select u).FirstOrDefault();
+            return user != null;
+        }
+
+        public bool Verify(long id)
+        {
+            var user = _db.Users.Find(id);
+            user.IsVerified = true;
+            return (_db.SaveChanges() > 0);
         }
     }
 }
