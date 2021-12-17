@@ -5,6 +5,7 @@ using LogicLayer.DbServices;
 using LogicLayer.EmailServices;
 using LogicLayer.MiscServices;
 using LogicLayer.StorageServices;
+using LogicLayer.AuthServices;
 
 
 namespace Quickly.Controllers
@@ -39,6 +40,25 @@ namespace Quickly.Controllers
                 return Ok(new { Message = "Registration Successful" });
             }
             return BadRequest(new { Message = "Registration Failed" });
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public ActionResult Login([FromForm]UserLoginModel userLoginModel)
+        {
+            var user = UserService.Login(userLoginModel.Email, userLoginModel.Pass);
+            if (user != null)
+            {
+                if (!user.IsVerified)
+                {
+                    return BadRequest(new { Message = "User Unverified, Please Verify Email First." });
+                }
+                var myClaims = new Dictionary<string, string>();
+                myClaims.Add("Id", user.Id.ToString());
+                myClaims.Add("UserType", user.UserType);
+                return Ok(new { Message = "Logged in Successfully", Token = new TokenService((userLoginModel.RememberMe) ? 525948:5).GenerateJsonWebToken(myClaims) });
+            }
+            return NotFound(new { Message = "Invalid Email/Password" });
         }
 
         [HttpPost]

@@ -45,5 +45,20 @@ namespace LogicLayer.DbServices
             var mapper = new Mapper(config);
             return mapper.Map<UserModel>(DataAccessFactory.UserDataAccess().GetUserByEmail(email));
         }
+
+        public static UserModel Login(string email, string pass)
+        {
+            var config = new MapperConfiguration(c =>
+            {
+                c.CreateMap<User, UserModel>();
+            });
+            var mapper = new Mapper(config);
+            var data = mapper.Map<UserModel>(DataAccessFactory.UserDataAccess().GetUserByEmail(email));
+            if(data == null)
+            {
+                return null;
+            }
+            return BCrypt.Net.BCrypt.Verify(pass, data.Pass) ? data : null;
+        }
     }
 }
