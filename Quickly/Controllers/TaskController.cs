@@ -28,7 +28,6 @@ namespace Quickly.Controllers
                 return Unauthorized(new { Message = "User Unauthorized, Please Login" });
             }
             var fk = FKProjectsUserService.GetOne(id, createTaskModel.ProjectId.GetValueOrDefault());
-            Console.WriteLine(fk.IsTaskEditor);
             if (fk.IsTaskEditor == false)
             {
                 return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Create Task" });

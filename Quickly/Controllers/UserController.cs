@@ -142,6 +142,24 @@ namespace Quickly.Controllers
         }
 
         [HttpGet]
+        [Route("get/project/members")]
+        public ActionResult<List<UserModel>> Get([FromHeader][Required] string TOKEN, [Required]long projectId)
+        {
+            long id = new IdFromTokenService().GetId(TOKEN);
+            if (id == -1)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, Please Login" });
+            }
+            var fk = FKProjectsUserService.GetOne(id, projectId);
+            if (fk.IsOwner == false)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Access This UserGroup" });
+            }
+            var members=UserService.GetMembers(projectId);
+            return Ok(members);
+        }
+
+        [HttpGet]
         [Route("all/users")]
         public ActionResult<List<UserModel>> Get()
         {

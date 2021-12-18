@@ -48,6 +48,15 @@ namespace LogicLayer.DbServices
             var mapper = new Mapper(config);
             return mapper.Map<List<UserModel>>(DataAccessFactory.UserDataAccess().Get());
         }
+        public static List<UserModel> GetMembers(long projectId)
+        {
+            var config = new MapperConfiguration(c =>
+            {
+                c.CreateMap<User, UserModel>();
+            });
+            var mapper = new Mapper(config);
+            return mapper.Map<List<UserModel>>(DataAccessFactory.UserDataAccess().GetMembers(projectId));
+        }
 
         public static UserModel GetByEmail(string email)
         {

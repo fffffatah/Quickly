@@ -13,6 +13,7 @@ namespace DataAccessLayer.IProviders
         public bool IsPhoneTaken(string phone);
         public User GetUserByEmail(string email);
         public User GetUserById(long id);
+        public List<User> GetMembers(long projectId);
         public bool Verify(long id);
     }
 }

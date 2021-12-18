@@ -37,6 +37,12 @@ namespace DataAccessLayer.Providers
             return _db.Users.ToList();
         }
 
+        public List<User> GetMembers(long projectId)
+        {
+            var users = (from u in _db.Users join f in _db.FkProjectsUsers on u.Id equals f.UserId where f.ProjectId == projectId && f.IsOwner == false select u).ToList();
+            return users;
+        }
+
         public User Get(long id)
         {
             throw new NotImplementedException();
