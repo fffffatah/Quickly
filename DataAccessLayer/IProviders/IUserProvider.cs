@@ -12,6 +12,7 @@ namespace DataAccessLayer.IProviders
         public bool IsEmailTaken(string email);
         public bool IsPhoneTaken(string phone);
         public User GetUserByEmail(string email);
+        public User GetUserById(long id);
         public bool Verify(long id);
     }
 }

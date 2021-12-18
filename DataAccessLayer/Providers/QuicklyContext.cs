@@ -20,6 +20,7 @@ namespace DataAccessLayer.Providers
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<CommentAttachment> CommentAttachments { get; set; } = null!;
         public virtual DbSet<FkProjectsUser> FkProjectsUsers { get; set; } = null!;
+        public virtual DbSet<Otp> Otps { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<Task> Tasks { get; set; } = null!;
         public virtual DbSet<TaskAttachment> TaskAttachments { get; set; } = null!;
@@ -110,6 +111,24 @@ namespace DataAccessLayer.Providers
                     .HasConstraintName("fk_projectsusers_users_id_fk");
             });
 
+            modelBuilder.Entity<Otp>(entity =>
+            {
+                entity.ToTable("Otps", "quickly");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Otp_Id_seq\"'::regclass)");
+
+                entity.Property(e => e.Otp1)
+                    .HasMaxLength(10)
+                    .HasColumnName("Otp");
+
+                entity.Property(e => e.UserId).HasDefaultValueSql("nextval('\"Otps_UserId_seq\"'::regclass)");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Otps)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("otps_users_id_fk");
+            });
+
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.ToTable("Projects", "quickly");
@@ -129,6 +148,14 @@ namespace DataAccessLayer.Providers
 
                 entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Tasks_Id_seq\"'::regclass)");
 
+                entity.Property(e => e.AssignedTo).HasDefaultValueSql("nextval('\"Tasks_AssignedTo_seq\"'::regclass)");
+
+                entity.Property(e => e.CreatedAt).HasColumnType("timestamp without time zone");
+
+                entity.Property(e => e.Deadline).HasColumnType("timestamp without time zone");
+
+                entity.Property(e => e.ProjectId).HasDefaultValueSql("nextval('\"Tasks_ProjectId_seq\"'::regclass)");
+
                 entity.Property(e => e.TaskDescription).HasMaxLength(1024);
 
                 entity.Property(e => e.TaskStatus).HasMaxLength(16);
@@ -136,6 +163,16 @@ namespace DataAccessLayer.Providers
                 entity.Property(e => e.TaskTitle).HasMaxLength(128);
 
                 entity.Property(e => e.TaskType).HasMaxLength(5);
+
+                entity.HasOne(d => d.AssignedToNavigation)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.AssignedTo)
+                    .HasConstraintName("tasks_users_id_fk");
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.ProjectId)
+                    .HasConstraintName("tasks_projects_id_fk");
             });
 
             modelBuilder.Entity<TaskAttachment>(entity =>

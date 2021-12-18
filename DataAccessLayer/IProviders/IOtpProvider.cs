@@ -7,8 +7,8 @@ using DataAccessLayer.Providers;
 
 namespace DataAccessLayer.IProviders
 {
-    public interface IFKProjectsUserProvider : IEntityProvider<FkProjectsUser, long>
+    public interface IOtpProvider:IEntityProvider<Otp, long>
     {
-        public FkProjectsUser GetOne(long userId, long projectId);
+        public Otp GetByOtp(string otp);
     }
 }

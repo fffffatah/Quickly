@@ -9,6 +9,8 @@ namespace DataAccessLayer.Providers
         {
             Comments = new HashSet<Comment>();
             FkProjectsUsers = new HashSet<FkProjectsUser>();
+            Otps = new HashSet<Otp>();
+            Tasks = new HashSet<Task>();
         }
 
         public long Id { get; set; }
@@ -22,5 +24,7 @@ namespace DataAccessLayer.Providers
 
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<FkProjectsUser> FkProjectsUsers { get; set; }
+        public virtual ICollection<Otp> Otps { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

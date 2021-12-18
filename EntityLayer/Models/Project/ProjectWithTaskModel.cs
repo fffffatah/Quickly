@@ -1,10 +1,11 @@
-﻿using System;
+﻿using EntityLayer.Models.Task;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Models
+namespace EntityLayer.Models.Project
 {
     public class ProjectWithTaskModel
     {

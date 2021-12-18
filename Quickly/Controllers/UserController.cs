@@ -6,7 +6,7 @@ using LogicLayer.EmailServices;
 using LogicLayer.MiscServices;
 using LogicLayer.StorageServices;
 using LogicLayer.AuthServices;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Quickly.Controllers
 {
@@ -43,6 +43,76 @@ namespace Quickly.Controllers
         }
 
         [HttpPost]
+        [Route("update")]
+        public ActionResult Update([FromHeader][Required] string TOKEN, [FromForm] UserUpdateModel userUpdateModel)
+        {
+            long id = new IdFromTokenService().GetId(TOKEN);
+            if(id == -1)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, Please Login" });
+            }
+            var user = UserService.GetById(id);
+            if (userUpdateModel.ProfileImage != null)
+            {
+                userUpdateModel.ProfileImageUrl = new BlobService().UploadFileToBlob(Guid.NewGuid().ToString(), userUpdateModel.ProfileImage);
+            }
+            if (UserService.Update(userUpdateModel, id))
+            {
+                return Ok(new { Message = "User Update Successful" });
+            }
+            return BadRequest(new { Message = "User Update Failed" });
+        }
+
+        [HttpGet]
+        [Route("send/otp")]
+        public ActionResult SendOtp(string email)
+        {
+            var tempUser = UserService.GetByEmail(email);
+            if(tempUser != null)
+            {
+                string otp = new Random().Next(111111, 999999).ToString();
+                new SendgridService().Send("info@quickly.com", "Quickly", tempUser.Email, tempUser.FullName, "Quickly OTP", "Your Quickly OTP", "<strong>OTP: " + otp + "</strong>");
+                var myotp = new UserOtpModel();
+                myotp.Otp1 = otp;
+                myotp.UserId = tempUser.Id;
+                OtpService.Add(myotp);
+                return Ok(new { Message = "OTP Sent" });
+            }
+            return NotFound(new { Message = "User Not Found" });
+        }
+
+        [HttpGet]
+        [Route("get/token/by/otp")]
+        public ActionResult GetTokenByOtp(string otp)
+        {
+            var tempotp = OtpService.GetByOtp(otp);
+            if(tempotp != null)
+            {
+                var myClaims = new Dictionary<string, string>();
+                myClaims.Add("Id", tempotp.UserId.ToString());
+                OtpService.Delete(tempotp.Id);
+                return Ok(new { Message = "OTP Verified", Token = new TokenService(5).GenerateJsonWebToken(myClaims) });
+            }
+            return BadRequest(new { Message = "Invalid OTP" });
+        }
+
+        [HttpPost]
+        [Route("reset/pass")]
+        public ActionResult ResetPass([FromHeader][Required] string TOKEN, [FromForm] UserResetPassModel userResetPassModel)
+        {
+            long id = new IdFromTokenService().GetId(TOKEN);
+            if (id == -1)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, Please Get Token First" });
+            }
+            if (UserService.ResetPass(userResetPassModel, id))
+            {
+                return Ok(new { Message = "Password Reset Successful" });
+            }
+            return BadRequest(new { Message = "Password Reset Failed" });
+        }
+
+        [HttpPost]
         [Route("login")]
         public ActionResult Login([FromForm]UserLoginModel userLoginModel)
         {
@@ -55,7 +125,6 @@ namespace Quickly.Controllers
                 }
                 var myClaims = new Dictionary<string, string>();
                 myClaims.Add("Id", user.Id.ToString());
-                myClaims.Add("UserType", user.UserType);
                 return Ok(new { Message = "Logged in Successfully", Token = new TokenService((userLoginModel.RememberMe) ? 525948:5).GenerateJsonWebToken(myClaims) });
             }
             return NotFound(new { Message = "Invalid Email/Password" });

@@ -23,6 +23,10 @@ namespace LogicLayer.AuthServices
         {
             authConfig = new AuthConfigModel { JwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"), JwtKey = Environment.GetEnvironmentVariable("JWT_KEY"), Timeout = timeout };
         }
+        public TokenService()
+        {
+            authConfig = new AuthConfigModel { JwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"), JwtKey = Environment.GetEnvironmentVariable("JWT_KEY"), Timeout = 5 };
+        }
         //GENERATE JSON WEB TOKEN WITH THE SPECIFIED CLAIMS
         public string GenerateJsonWebToken(IDictionary<string, string> myClaims)
         {

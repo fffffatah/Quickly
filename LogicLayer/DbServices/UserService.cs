@@ -22,6 +22,19 @@ namespace LogicLayer.DbServices
             var data = mapper.Map<User>(userRegistrationModel);
             return DataAccessFactory.UserDataAccess().Add(data);
         }
+        public static bool Update(UserUpdateModel userUpdateModel, long id)
+        {
+            var user = DataAccessFactory.UserDataAccess().GetUserById(id);
+            user.ProfileImageUrl = (userUpdateModel.ProfileImageUrl != null ? userUpdateModel.ProfileImageUrl : user.ProfileImageUrl);
+            user.FullName=(userUpdateModel.FullName != null ? userUpdateModel.FullName : user.FullName);
+            return DataAccessFactory.UserDataAccess().Edit(user);
+        }
+        public static bool ResetPass(UserResetPassModel userResetPassModel, long id)
+        {
+            var user = DataAccessFactory.UserDataAccess().GetUserById(id);
+            user.Pass = BCrypt.Net.BCrypt.HashPassword(userResetPassModel.Pass, BCrypt.Net.BCrypt.GenerateSalt());
+            return DataAccessFactory.UserDataAccess().Edit(user);
+        }
         public static bool Verify(long id)
         {
             return DataAccessFactory.UserDataAccess().Verify(id);
@@ -44,6 +57,16 @@ namespace LogicLayer.DbServices
             });
             var mapper = new Mapper(config);
             return mapper.Map<UserModel>(DataAccessFactory.UserDataAccess().GetUserByEmail(email));
+        }
+
+        public static UserModel GetById(long id)
+        {
+            var config = new MapperConfiguration(c =>
+            {
+                c.CreateMap<User, UserModel>();
+            });
+            var mapper = new Mapper(config);
+            return mapper.Map<UserModel>(DataAccessFactory.UserDataAccess().GetUserById(id));
         }
 
         public static UserModel Login(string email, string pass)

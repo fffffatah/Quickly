@@ -7,16 +7,14 @@ using DataAccessLayer.IProviders;
 
 namespace DataAccessLayer.Providers
 {
-    public class FKProjectsUserRepo : IFKProjectsUserProvider
+    public class OtpRepo : IOtpProvider
     {
-
         QuicklyContext _db;
-        public FKProjectsUserRepo(QuicklyContext db)
+        public OtpRepo(QuicklyContext db)
         {
             _db = db;
         }
-
-        public bool Add(FkProjectsUser e)
+        public bool Add(Otp e)
         {
             _db.Add(e);
             return (_db.SaveChanges() > 0);
@@ -24,27 +22,32 @@ namespace DataAccessLayer.Providers
 
         public bool Delete(long id)
         {
+            var otp = (from u in _db.Otps where u.Id == id select u).FirstOrDefault();
+            if(otp != null)
+            {
+                _db.Otps.Remove(otp);
+            }
+            return (_db.SaveChanges() > 0);
+        }
+
+        public bool Edit(Otp e)
+        {
             throw new NotImplementedException();
         }
 
-        public bool Edit(FkProjectsUser e)
+        public List<Otp> Get()
         {
             throw new NotImplementedException();
         }
 
-        public List<FkProjectsUser> Get()
+        public Otp Get(long id)
         {
             throw new NotImplementedException();
         }
 
-        public FkProjectsUser Get(long id)
+        public Otp GetByOtp(string otp)
         {
-            throw new NotImplementedException();
-        }
-        public FkProjectsUser GetOne(long userId, long projectId)
-        {
-            var fk = (from f in _db.FkProjectsUsers where f.UserId == userId && f.ProjectId == projectId select f).FirstOrDefault();
-            return fk;
+            return (from u in _db.Otps where u.Otp1 == otp select u).FirstOrDefault();
         }
     }
 }
