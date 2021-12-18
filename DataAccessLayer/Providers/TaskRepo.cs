@@ -17,17 +17,24 @@ namespace DataAccessLayer.Providers
 
         public bool Add(Task e)
         {
-            throw new NotImplementedException();
+            _db.Add(e);
+            return (_db.SaveChanges() > 0); ;
         }
 
         public bool Delete(long id)
         {
-            throw new NotImplementedException();
+            var otp = (from u in _db.Tasks where u.Id == id select u).FirstOrDefault();
+            if (otp != null)
+            {
+                _db.Tasks.Remove(otp);
+            }
+            return (_db.SaveChanges() > 0);
         }
 
         public bool Edit(Task e)
         {
-            throw new NotImplementedException();
+            _db.Update<Task>(e);
+            return (_db.SaveChanges() > 0);
         }
 
         public List<Task> Get()
@@ -37,7 +44,18 @@ namespace DataAccessLayer.Providers
 
         public Task Get(long id)
         {
-            throw new NotImplementedException();
+            return (from u in _db.Tasks where u.Id == id select u).FirstOrDefault();
+        }
+
+        public List<Task> GetForProject(long projectId)
+        {
+            var tasks=(from t in _db.Tasks where t.ProjectId == projectId select t).ToList();
+            return tasks;
+        }
+        public List<Task> GetForAssignee(long projectId, long assignedTo)
+        {
+            var tasks = (from t in _db.Tasks where t.ProjectId == projectId && t.AssignedTo == assignedTo select t).ToList();
+            return tasks;
         }
     }
 }

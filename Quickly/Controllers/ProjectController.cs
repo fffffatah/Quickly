@@ -99,7 +99,7 @@ namespace Quickly.Controllers
 
         [HttpGet]
         [Route("get/for/owner")]
-        public ActionResult GetForOwner([FromHeader][Required] string TOKEN)
+        public ActionResult<List<ProjectModel>> GetForOwner([FromHeader][Required] string TOKEN)
         {
             long id = new IdFromTokenService().GetId(TOKEN);
             if (id == -1)
@@ -116,7 +116,7 @@ namespace Quickly.Controllers
 
         [HttpGet]
         [Route("get/for/member")]
-        public ActionResult GetForMember([FromHeader][Required] string TOKEN)
+        public ActionResult<List<ProjectModel>> GetForMember([FromHeader][Required] string TOKEN)
         {
             long id = new IdFromTokenService().GetId(TOKEN);
             if (id == -1)
@@ -133,7 +133,7 @@ namespace Quickly.Controllers
 
         [HttpGet]
         [Route("get/for/user")]
-        public ActionResult GetForUser([FromHeader][Required] string TOKEN)
+        public ActionResult<List<ProjectModel>> GetForUser([FromHeader][Required] string TOKEN)
         {
             long id = new IdFromTokenService().GetId(TOKEN);
             if (id == -1)

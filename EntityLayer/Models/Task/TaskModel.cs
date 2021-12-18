@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EntityLayer.Models
+namespace EntityLayer.Models.Task
 {
     public class TaskModel
     {
@@ -15,5 +15,7 @@ namespace EntityLayer.Models
         public DateTime? Deadline { get; set; }
         public string? TaskStatus { get; set; }
         public string? TaskType { get; set; }
+        public long? ProjectId { get; set; }
+        public long? AssignedTo { get; set; }
     }
 }
