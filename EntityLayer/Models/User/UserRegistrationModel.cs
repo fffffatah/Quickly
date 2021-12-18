@@ -12,7 +12,6 @@ namespace EntityLayer.Models.User
 {
     public class UserRegistrationModel
     {
-        [JsonIgnore]
         public long Id { get; set; }
         public string? ProfileImageUrl { get; set; }
         [ImageMimeValidation]

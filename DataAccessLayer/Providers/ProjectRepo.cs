@@ -17,17 +17,33 @@ namespace DataAccessLayer.Providers
 
         public bool Add(Project e)
         {
-            throw new NotImplementedException();
+            _db.Add(e);
+            return (_db.SaveChanges() > 0);
+        }
+        public long AddGetId(Project e)
+        {
+            _db.Add(e);
+            if((_db.SaveChanges() > 0))
+            {
+                return e.Id;
+            }
+            return -1;
         }
 
         public bool Delete(long id)
         {
-            throw new NotImplementedException();
+            var otp = (from u in _db.Projects where u.Id == id select u).FirstOrDefault();
+            if (otp != null)
+            {
+                _db.Projects.Remove(otp);
+            }
+            return (_db.SaveChanges() > 0);
         }
 
         public bool Edit(Project e)
         {
-            throw new NotImplementedException();
+            _db.Update<Project>(e);
+            return (_db.SaveChanges() > 0);
         }
 
         public List<Project> Get()
@@ -37,7 +53,25 @@ namespace DataAccessLayer.Providers
 
         public Project Get(long id)
         {
-            throw new NotImplementedException();
+            return (from u in _db.Projects where u.Id == id select u).FirstOrDefault();
+        }
+
+        public List<Project> GetForUser(long userId)
+        {
+            var projects = (from p in _db.Projects join f in _db.FkProjectsUsers on p.Id equals f.ProjectId where f.UserId == userId select p).ToList();
+            return projects;
+        }
+
+        public List<Project> GetForOwner(long userId)
+        {
+            var projects = (from p in _db.Projects join f in _db.FkProjectsUsers on p.Id equals f.ProjectId where f.UserId == userId && f.IsOwner == true select p).ToList();
+            return projects;
+        }
+
+        public List<Project> GetForMember(long userId)
+        {
+            var projects = (from p in _db.Projects join f in _db.FkProjectsUsers on p.Id equals f.ProjectId where f.UserId == userId && f.IsOwner == false select p).ToList();
+            return projects;
         }
     }
 }

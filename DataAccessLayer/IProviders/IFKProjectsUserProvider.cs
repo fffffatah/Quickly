@@ -9,5 +9,6 @@ namespace DataAccessLayer.IProviders
 {
     public interface IFKProjectsUserProvider : IEntityProvider<FkProjectsUser, long>
     {
+        public FkProjectsUser GetOne(long userId, long projectId);
     }
 }

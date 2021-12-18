@@ -18,7 +18,8 @@ namespace DataAccessLayer.Providers
 
         public bool Add(FkProjectsUser e)
         {
-            throw new NotImplementedException();
+            _db.Add(e);
+            return (_db.SaveChanges() > 0);
         }
 
         public bool Delete(long id)
@@ -39,6 +40,11 @@ namespace DataAccessLayer.Providers
         public FkProjectsUser Get(long id)
         {
             throw new NotImplementedException();
+        }
+        public FkProjectsUser GetOne(long userId, long projectId)
+        {
+            var fk = (from f in _db.FkProjectsUsers where f.UserId == userId && f.ProjectId == projectId select f).FirstOrDefault();
+            return fk;
         }
     }
 }
