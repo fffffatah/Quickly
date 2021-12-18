@@ -14,7 +14,10 @@ namespace DataAccessLayer.Providers
         {
             _db = new QuicklyContext();
         }
-
+        public static IOtpProvider OtpDataAccess()
+        {
+            return new OtpRepo(_db);
+        }
         public static IUserProvider UserDataAccess()
         {
             return new UserRepo(_db);

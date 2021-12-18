@@ -28,7 +28,8 @@ namespace DataAccessLayer.Providers
 
         public bool Edit(User e)
         {
-            throw new NotImplementedException();
+            _db.Update<User>(e);
+            return (_db.SaveChanges() > 0);
         }
 
         public List<User> Get()
@@ -44,6 +45,11 @@ namespace DataAccessLayer.Providers
         public User GetUserByEmail(string email)
         {
             return (from u in _db.Users where u.Email == email select u).FirstOrDefault();
+        }
+
+        public User GetUserById(long id)
+        {
+            return (from u in _db.Users where u.Id == id select u).FirstOrDefault();
         }
 
         public bool IsEmailTaken(string email)

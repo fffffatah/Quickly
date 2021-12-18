@@ -20,6 +20,7 @@ namespace DataAccessLayer.Providers
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<CommentAttachment> CommentAttachments { get; set; } = null!;
         public virtual DbSet<FkProjectsUser> FkProjectsUsers { get; set; } = null!;
+        public virtual DbSet<Otp> Otps { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<Task> Tasks { get; set; } = null!;
         public virtual DbSet<TaskAttachment> TaskAttachments { get; set; } = null!;
@@ -29,7 +30,8 @@ namespace DataAccessLayer.Providers
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable("POSTGRE_SQL"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=5090;SearchPath=quickly;");
             }
         }
 
@@ -108,6 +110,24 @@ namespace DataAccessLayer.Providers
                     .WithMany(p => p.FkProjectsUsers)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("fk_projectsusers_users_id_fk");
+            });
+
+            modelBuilder.Entity<Otp>(entity =>
+            {
+                entity.ToTable("Otps", "quickly");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("nextval('\"Otp_Id_seq\"'::regclass)");
+
+                entity.Property(e => e.Otp1)
+                    .HasMaxLength(10)
+                    .HasColumnName("Otp");
+
+                entity.Property(e => e.UserId).HasDefaultValueSql("nextval('\"Otps_UserId_seq\"'::regclass)");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Otps)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("otps_users_id_fk");
             });
 
             modelBuilder.Entity<Project>(entity =>
