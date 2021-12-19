@@ -28,6 +28,10 @@ namespace Quickly.Controllers
                 return Unauthorized(new { Message = "User Unauthorized, Please Login" });
             }
             var fk = FKProjectsUserService.GetOne(id, createTaskModel.ProjectId.GetValueOrDefault());
+            if(fk== null)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Create Task" });
+            }
             if (fk.IsTaskEditor == false)
             {
                 return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Create Task" });
@@ -49,6 +53,10 @@ namespace Quickly.Controllers
                 return Unauthorized(new { Message = "User Unauthorized, Please Login" });
             }
             var fk = FKProjectsUserService.GetOne(id, projectId);
+            if (fk == null)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Delete Task" });
+            }
             if (fk.IsTaskEditor == false)
             {
                 return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Delete Task" });
@@ -86,6 +94,10 @@ namespace Quickly.Controllers
                 return Unauthorized(new { Message = "User Unauthorized, Please Login" });
             }
             var fk = FKProjectsUserService.GetOne(id, projectId);
+            if (fk == null)
+            {
+                return Unauthorized(new { Message = "User Unauthorized" });
+            }
             if (fk.IsOwner == true)
             {
                 var tasks = TaskService.Get(projectId);

@@ -35,7 +35,7 @@ namespace Quickly.Controllers
             if (UserService.Add(user))
             {
                 var tempUser=UserService.GetByEmail(user.Email);
-                string url = Environment.GetEnvironmentVariable("REACT_EMAIL_VERIFICATION_URL")+"?id="+tempUser.Id.ToString();
+                string url = "http://localhost:3000/verify/" + tempUser.Id.ToString();
                 new SendgridService().Send("info@quickly.com", "Quickly", user.Email, user.FullName, "Quickly Account Verification", "Confirmation Email for Your Quickly Account", "<strong>Confirm Your Email Address: <u><a href=" + url + " target=\"_blank\">Click Here</a></u></strong>");
                 return Ok(new { Message = "Registration Successful" });
             }
@@ -91,7 +91,7 @@ namespace Quickly.Controllers
                 var myClaims = new Dictionary<string, string>();
                 myClaims.Add("Id", tempotp.UserId.ToString());
                 OtpService.Delete(tempotp.Id);
-                return Ok(new { Message = "OTP Verified", Token = new TokenService(5).GenerateJsonWebToken(myClaims) });
+                return Ok(new { Message = "OTP Verified", ResetToken = new TokenService(5).GenerateJsonWebToken(myClaims) });
             }
             return BadRequest(new { Message = "Invalid OTP" });
         }
@@ -130,7 +130,7 @@ namespace Quickly.Controllers
             return NotFound(new { Message = "Invalid Email/Password" });
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("verify")]
         public ActionResult Verify(long id)
         {
@@ -151,6 +151,10 @@ namespace Quickly.Controllers
                 return Unauthorized(new { Message = "User Unauthorized, Please Login" });
             }
             var fk = FKProjectsUserService.GetOne(id, projectId);
+            if (fk == null)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Access This UserGroup" });
+            }
             if (fk.IsOwner == false)
             {
                 return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Access This UserGroup" });
@@ -164,6 +168,23 @@ namespace Quickly.Controllers
         public ActionResult<List<UserModel>> Get()
         {
             return UserService.Get();
+        }
+
+        [HttpGet]
+        [Route("get/one")]
+        public ActionResult<UserModel> Get([FromHeader][Required] string TOKEN)
+        {
+            long id = new IdFromTokenService().GetId(TOKEN);
+            if (id == -1)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, Please Login" });
+            }
+            var user = UserService.GetById(id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            return BadRequest(new { Message = "Fetch User Failed" });
         }
     }
 }
