@@ -61,6 +61,10 @@ namespace Quickly.Controllers
                 return Unauthorized(new { Message = "User Unauthorized, Please Login" });
             }
             var fk = FKProjectsUserService.GetOne(id, projectId);
+            if (fk == null)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Edit This Project" });
+            }
             if (fk.IsOwner==false && fk.IsProjectEditor==false)
             {
                 return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Edit This Project" });
@@ -86,6 +90,10 @@ namespace Quickly.Controllers
                 return Unauthorized(new { Message = "User Unauthorized, Please Login" });
             }
             var fk = FKProjectsUserService.GetOne(id, projectId);
+            if (fk == null)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Delete This Project" });
+            }
             if (fk.IsOwner == false)
             {
                 return Unauthorized(new { Message = "User Unauthorized, You Do Not Have Permission To Delete This Project" });
