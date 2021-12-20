@@ -1,4 +1,5 @@
 import IconImage from "../../assets/Icon.png";
+import ProjectImagePlaceholder from "../../assets/Project.png";
 import ProfilePlaceholder from "../../assets/Profile.png";
 import { Container, Navbar, NavItem, Image, NavDropdown, Modal, Button, ListGroup, Form, FormLabel, Row, Col } from "react-bootstrap";
 import useGet from "./useGet";
@@ -58,8 +59,42 @@ export default function UserTopNav() {
         localStorage.removeItem("token");
         navigate("/");
     }
+    //CREATE PROJECT
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const handleCloseCreate = () => setShowCreateModal(false);
+    const handleShowCreate = () => setShowCreateModal(true);
+    const [cprojectName, setCprojectName] = useState('');
+    const [cprojectDetail, setCprojectDetail] = useState('');
+    const [cprojectImage, setCprojectImage] = useState(null);
     return(
         <>
+            <>
+                <Modal show={showCreateModal} onHide={handleCloseCreate}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>New Project</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item>
+                                <Image roundedCircle src={cprojectImage?URL.createObjectURL(cprojectImage):ProjectImagePlaceholder} height="150px" width="150px" fluid/>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Form.Control type="file" name="file" id="file" onChange={(event) => setCprojectImage(event.target.files[0])} placeholder="Project Image" accept="image/*"/>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Form.Control type="text" onChange={(event) => setCprojectName(event.target.value)} value={cprojectName} placeholder="Project Name"/>
+                            </ListGroup.Item>
+                            <ListGroup.Item>
+                                <Form.Control type="text" onChange={(event) => setCprojectDetail(event.target.value)} value={cprojectDetail} placeholder="Project Details"/>
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseCreate}>Close</Button>
+                    <Button variant="primary" onClick={handleCloseCreate}>Create</Button>
+                    </Modal.Footer>
+                </Modal>
+            </>
             <>
                 <Modal show={showEdit} onHide={handleCloseEdit}>
                     <Modal.Header closeButton>
@@ -106,7 +141,7 @@ export default function UserTopNav() {
             </Navbar>
             <div style={{'padding-top':'50px'}}>
                 <div style={{'font-family':'Segoe UI'},{'color':'#3B8CF5'}}>
-                    <h1 style={{'padding-left':'50px'}}><b>My Projects</b></h1>
+                    <h1 style={{'padding-left':'50px'}}><b>My Projects</b> <Button variant="primary" onClick={handleShowCreate}>New</Button></h1>
                 </div>
                 <div style={{'padding-top':'20px'}}></div>
                 <Container>
