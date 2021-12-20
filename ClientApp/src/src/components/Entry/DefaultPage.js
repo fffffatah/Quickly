@@ -36,7 +36,7 @@ export default function DefaultPage() {
             setErrEmail("");
             setErrPass("");
             setErrorMessage("");
-            setShowLoginLoading(!showLoginLoading);
+            setShowLoginLoading(false);
             await onLogin();
         }
     };
@@ -54,12 +54,12 @@ export default function DefaultPage() {
             },
           })
           .then((response) => {
-                setShowLoginLoading(!showLoginLoading);
+                setShowLoginLoading(true);
                 localStorage.setItem("token", response.data.token);
                 navigate('/home');
           })
           .catch((error) => {
-                setShowLoginLoading(!showLoginLoading);
+                setShowLoginLoading(true);
                 console.log("ERRRR:: ", error);
                 setErrorMessage("* Invalid Credentials");
           });
@@ -135,7 +135,7 @@ export default function DefaultPage() {
     const [showRegister, setShowRegister] = useState(false);
     const handleCloseRegister = () => setShowRegister(false);
     const handleShowRegister = () => setShowRegister(true);
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState();
     const [fullName, setFullName] = useState("");
     const [errFullName, setErrFullName] = useState("");
     const [regEmail, setRegEmail] = useState("");
@@ -146,7 +146,7 @@ export default function DefaultPage() {
     const [errRegPhone, setErrRegPhone] = useState("");
     const [errRegMessage, setErrRegMessage] = useState("");
     //VALIDATION
-    const onRegistrationValidation = async () => {
+    const onRegistrationValidation = () => {
         if (fullName === "" && regEmail === "" && regPass === "" && regPhone === "") {
             setErrRegEmail("* Email Required");
             setErrRegPhone("* Phone Required");
@@ -158,40 +158,32 @@ export default function DefaultPage() {
             setErrFullName("");
             setErrRegPass("");
             setErrRegMessage("");
-            setShowLoginLoading(!showLoginLoading);
-            await onRegister();
+            setShowLoginLoading(false);
+            onRegister();
         }
     };
-    const onRegister = async () => {
+    const onRegister = () => {
         const formdata = new FormData();
         formdata.append("Id", 23);
         formdata.append("ProfileImageUrl", "empty");
-        formdata.append("ProfileImage", profileImage, "dummy");
+        formdata.append("ProfileImage", profileImage);
         formdata.append("Email", regEmail);
         formdata.append("Pass", regPass);
         formdata.append("FullName", fullName);
         formdata.append("ConfirmedPass", regPass);
         formdata.append("UserType", "user");
         formdata.append("IsVerified", false);
-        alert(regEmail+ regPass+ regPhone+ fullName);
-        const res = await axios
-          .post(API+"User/register", formdata, {
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-              "Content-Type": "multipart/form-data",
-                Accept: "application/json",
-            },
-          })
+        axios.post(API+"User/register", formdata)
           .then((response) => {
-                setShowLoginLoading(!showLoginLoading);
+                setShowLoginLoading(true);
+                console.log(response.data);
                 setShowSuccess(true);
           })
           .catch((error) => {
-                setShowLoginLoading(!showLoginLoading);
-                console.log(error);
+                setShowLoginLoading(true);
+                console.log(JSON.stringify(error));
                 setErrRegMessage("* Couldn't Register");
           });
-          console.log(res);
       };
     //=============================================================================================================
     return(

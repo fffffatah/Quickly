@@ -186,5 +186,53 @@ namespace Quickly.Controllers
             }
             return BadRequest(new { Message = "Fetch User Failed" });
         }
+
+        [HttpGet]
+        [Route("invite")]
+        public ActionResult Invite([FromHeader][Required] string TOKEN, [Required]string email, [Required]long projectId)
+        {
+            long id = new IdFromTokenService().GetId(TOKEN);
+            if (id == -1)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, Please Login" });
+            }
+            var user = UserService.GetById(id);
+            if (user != null)
+            {
+                string url = "http://localhost:3000/confirm/invite" + projectId.ToString();
+                new SendgridService().Send("info@quickly.com", "Quickly", email, "User", "Quickly Inviation", "Your Quickly Project Invation", "<strong>"+user.FullName+" has invited you to a project. <u><a href=" + url + " target=\"_blank\">Click Here To Confirm</a></u></strong>");
+                return Ok(new { Message = "Invitation Sent" });
+            }
+            return BadRequest(new { Message = "Invation Failed" });
+        }
+
+        [HttpGet]
+        [Route("change/permission")]
+        public ActionResult ChangePermission([FromHeader][Required] string TOKEN, [Required]bool isTaskEditor, [Required] bool isProjectEditor, [Required] bool isInvitor, [Required] long projectId, [Required]long userId)
+        {
+            long id = new IdFromTokenService().GetId(TOKEN);
+            if (id == -1)
+            {
+                return Unauthorized(new { Message = "User Unauthorized, Please Login" });
+            }
+            var user = UserService.GetById(id);
+            if(user != null)
+            {
+                if (id == userId)
+                {
+                    return Ok(new { Message = "You are the project owner" });
+                }
+                var fk = FKProjectsUserService.GetOne(userId, projectId);
+                if (fk != null)
+                {
+                    fk.IsTaskEditor = isTaskEditor;
+                    fk.IsProjectEditor = isProjectEditor;
+                    fk.IsInvitor = isInvitor;
+                    FKProjectsUserService.Edit(fk);
+                    return Ok(new { Message = "Permission Changed" });
+                }
+            }
+            return BadRequest(new { Message = "Permission Change Failed" });
+        }
     }
 }

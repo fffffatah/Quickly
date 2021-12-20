@@ -21,6 +21,16 @@ namespace LogicLayer.DbServices
             var data = mapper.Map<FkProjectsUser>(fKProjectsUsersModel);
             return DataAccessFactory.FKDataAccess().Add(data);
         }
+        public static bool Edit(FKProjectsUsersModel fKProjectsUsersModel)
+        {
+            var config = new MapperConfiguration(c =>
+            {
+                c.CreateMap<FKProjectsUsersModel, FkProjectsUser>();
+            });
+            var mapper = new Mapper(config);
+            var data = mapper.Map<FkProjectsUser>(fKProjectsUsersModel);
+            return DataAccessFactory.FKDataAccess().Edit(data);
+        }
         public static FKProjectsUsersModel GetOne(long userId, long projectId)
         {
             var config = new MapperConfiguration(c =>
