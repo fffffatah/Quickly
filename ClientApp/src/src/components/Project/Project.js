@@ -69,7 +69,7 @@ export default function Project({project}) {
                     </Modal.Body>
                     <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseTask}>Close</Button>
-                    <Button variant="primary" onClick={handleCloseTask}>Send</Button>
+                    <Button variant="primary" onClick={handleCloseTask}>Add</Button>
                     </Modal.Footer>
                 </Modal>
             </>
