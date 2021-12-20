@@ -29,7 +29,8 @@ namespace DataAccessLayer.Providers
 
         public bool Edit(FkProjectsUser e)
         {
-            throw new NotImplementedException();
+            _db.Update<FkProjectsUser>(e);
+            return (_db.SaveChanges() > 0);
         }
 
         public List<FkProjectsUser> Get()

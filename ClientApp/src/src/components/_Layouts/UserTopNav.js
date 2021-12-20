@@ -6,6 +6,8 @@ import { useState } from "react";
 import { API } from "../../config";
 import { useNavigate } from "react-router-dom";
 import Project from "../Project/Project";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function UserTopNav() {
     document.title = "Quickly";
@@ -13,9 +15,29 @@ export default function UserTopNav() {
     const [projectsOwner, setProjectsOwner] = useState([]);
     const [projectsMember, setProjectsMember] = useState([]);
     const navigate = useNavigate();
-    useGet(API+"User/get/one", localStorage.getItem("token"), setUser);
-    useGet(API+"Project/get/for/owner", localStorage.getItem("token"), setProjectsOwner);
-    useGet(API+"Project/get/for/member", localStorage.getItem("token"), setProjectsMember);
+    const getMyProjects = (url, token, callback) => {
+        axios.get(url, { headers: { 'Access-Control-Allow-Origin': '*', 'Accept' : 'application/json', 'TOKEN':token } })
+        .then((response)=>{callback(response.data)})
+        .catch((error)=>{console.log('ERROR: '+error)});
+    }
+    useEffect(()=>{
+        getMyProjects(API+"User/get/one", localStorage.getItem("token"), setUser);
+        for (let index = 0; index < 10000; index++) {
+            console.log(index);
+        }
+    }, [])
+    useEffect(()=>{
+        getMyProjects(API+"Project/get/for/owner", localStorage.getItem("token"), setProjectsOwner);
+        for (let index = 0; index < 10000; index++) {
+            console.log(index);
+        }
+    }, [])
+    useEffect(()=>{
+        getMyProjects(API+"Project/get/for/member", localStorage.getItem("token"), setProjectsMember);
+        for (let index = 0; index < 10000; index++) {
+            console.log(index);
+        }
+    }, [])
     //EDIT PROFILE
     const [showEdit, setShowEdit] = useState(false);
     const handleCloseEdit = () => setShowEdit(false);
