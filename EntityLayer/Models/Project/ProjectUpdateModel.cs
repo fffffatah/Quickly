@@ -18,6 +18,7 @@ namespace EntityLayer.Models.Project
         public string? ProjectDetails { get; set; }
         public string? ProjectImageUrl { get; set; }
         [ImageMimeValidation]
+        [ImageFilter]
         public IFormFile? ProjectImage { get; set; }
     }
 }

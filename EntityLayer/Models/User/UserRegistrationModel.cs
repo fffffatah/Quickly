@@ -15,6 +15,7 @@ namespace EntityLayer.Models.User
         public long Id { get; set; }
         public string? ProfileImageUrl { get; set; }
         [ImageMimeValidation]
+        [ImageFilter]
         public IFormFile? ProfileImage { get; set; }
         [Required(ErrorMessage = "* Full Name Required")]
         public string? FullName { get; set; }
