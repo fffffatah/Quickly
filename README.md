@@ -8,7 +8,7 @@ Quickly is an API for a simple project management tool for managing personal pro
 | https://quickly.readme.io/ | [![Build & Generate API Reference](https://github.com/fffffatah/Quickly/actions/workflows/build.yaml/badge.svg)](https://github.com/fffffatah/Quickly/actions/workflows/build.yaml) |
 
 
-## Setting Up
+# Setting Up
 To build and run the project on your local machine make sure you have .NET 6, Azure Storage Emulator and Postgre 14 installed. Also, make sure you have the below environment variables set.
 
 ``
