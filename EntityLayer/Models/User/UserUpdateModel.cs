@@ -13,6 +13,7 @@ namespace EntityLayer.Models.User
     {
         public string? ProfileImageUrl { get; set; }
         [ImageMimeValidation]
+        [ImageFilter]
         public IFormFile? ProfileImage { get; set; }
         public string? FullName { get; set; }
     }
